@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Resetting styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        /* Login container */
+        .login-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+        }
+
+        /* Heading */
+        .login-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        /* Form group styling */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #333;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #6a11cb;
+            box-shadow: 0 0 5px rgba(106, 17, 203, 0.3);
+        }
+
+        /* Button styling */
+        .btn {
+            width: 100%;
+            background: #6a11cb;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #4e0fa5;
+        }
+
+        /* Links styling */
+        .links {
+            margin-top: 15px;
+        }
+
+        .links a {
+            color: #6a11cb;
+            text-decoration: none;
+            margin: 0 5px;
+            font-size: 14px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Sign in</h2>
+        <% if (message) { %>
+            <p class="error-message-success"><%= message %></p>
+        <% } %>
+        <form id="registrationForm" class="form" method="post" action="/user/login">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="Enter your email" class="form__input" autocomplete="off" />
+                <span class="error-message-email" id="emailError"></span>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter your password" class="form__input" />
+                <span class="error-message-password" id="passwordError"></span>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <div class="links">
+                <a href="/user/register">Signup</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const message = "<%= message || '' %>";
+
+        if (message) {
+            swal(message);
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            const emailError = document.getElementById("emailError");
+            const passwordError = document.getElementById("passwordError");
+
+            emailError.textContent = "";
+            passwordError.textContent = "";
+
+            let isValid = true;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (email === "") {
+                emailError.textContent = "Email Required";
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                emailError.textContent = "Please Enter a valid Email";
+                isValid = false;
+            }
+
+            if (password === "") {
+                passwordError.textContent = "Password Required";
+                isValid = false;
+            }
+
+            if (isValid) {
+                this.submit();
+            }
+        });
+    </script>
+</body>
+</html>
+

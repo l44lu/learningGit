@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin Panel</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+
+    <style>
+
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body and background */
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #ececec; /* Light grey background */
+  margin-top: 56px; /* Adjusted to give space for fixed navbar */
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #2575fc; /* Primary color */
+  z-index: 1000;
+}
+
+.navbar .navbar-brand {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navbar .navbar-toggler {
+  border-color: #fff;
+}
+
+.navbar .navbar-toggler-icon {
+  background-color: #fff;
+}
+
+/* Container holding the main content */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 80px; /* Adjusted for the fixed navbar */
+}
+
+/* Table */
+.table-responsive {
+  margin-top: 30px;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #2575fc;
+  color: white;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Buttons and Inputs */
+.search-box {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.search-button {
+  background-color: #2575fc;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #6a11cb;
+}
+
+.btn {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.navbar-nav .nav-item form .show-all-btn {
+  background-color: #2575fc;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.navbar-nav .nav-item form .show-all-btn:hover {
+  background-color: #6a11cb;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  margin: 100px auto;
+}
+
+.close {
+  font-size: 30px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.modal-btn {
+  background-color: #2575fc;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.modal-btn:hover {
+  background-color: #6a11cb;
+}
+
+/* Additional Styles */
+h1 {
+  text-align: center;
+  color: #2575fc;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.message {
+  text-align: center;
+  color: red;
+  margin-bottom: 20px;
+}
+
+
+    </style>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Admin Panel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item me-3">
+                        <form action="/admin/dashboard" method="get">
+                            <button class="show-all-btn">View All</button>
+                        </form>
+                    </li>
+                    <li class="nav-item me-3">
+                        <form action="/admin/searchUser" method="post">
+                            <input type="search" id="name" class="search-box" name="search" value="<%= typeof searchQuery !== "undefined"? searchQuery: '' %>">
+                            <button type="submit" class="search-button" onclick="return validateSearch()">Search</button>
+                        </form>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link btn btn-success text-white" href="/admin/dashboard/add">Add user</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link btn btn-danger text-white" onclick="window.location.href='/admin/logout'">Logout</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Admin Panel</h1>
+        <p style="margin-left: 530px; color:red;" ><%= message %></p>
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ID</th>
+                        <!-- <th>Name</th> -->
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach((user, index) => {  %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <!-- <td>John Doe</td> -->
+                        <td><%= user.email %></td>
+                        <td>
+                            <button onclick="openEditUserModal('<%= user._id %>', '<%= user.email %>')" class="btn btn-success btn-sm">Edit</button>
+                            <button onclick="deleteUser('<%= user._id %>')" class="btn btn-danger btn-sm">Delete</button>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+   <!--edit user modal -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditUserModal()">&times;</span>
+            <h2>Edit User</h2>
+            <form action="/admin/edit" id="editUserForm" method="post">
+                <input type="hidden" id="editUserId" name="id">
+                <label for="editEmail">Email</label>
+                <input type="email" id="editEmail" name="email" placeholder="Email">
+                <label for="editPassword">Password</label>
+                <input type="password" id="editPassword" name="password" placeholder="Password">
+                <button type="submit" class="modal-btn">Save Changes</button>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script>
+        // open and close edit modal
+        function openEditUserModal(id, email) {
+            document.getElementById('editUserModal').style.display = "block";
+            document.getElementById('editUserId').value = id;
+            document.getElementById('editEmail').value = email;
+
+        }
+
+        function closeEditUserModal() {
+            document.getElementById('editUserModal').style.display = "none";
+        }
+
+        function deleteUser(userId) {
+            if(confirm("Are you sure want to delete this user?")) {
+                window.location.href = `/admin/delete/${userId}`;
+            }
+        }
+
+        //-----------
+        function validateSearch() {
+            const searchInput = document.getElementById('name').value.trim();
+            if (!searchInput) {
+                alert('Please enter a search term');
+                return false; 
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>
