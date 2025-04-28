@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create an Account</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+    }
+
+    form > * {
+      display: block;
+      margin: 15px auto;
+    }
+
+    input[type="text"], input[type="password"], input[type="email"] {
+      background-color: rgb(50, 50, 50);
+      width: 150px;
+      outline: 0;
+      border: 0px solid;
+      border-radius: 12px;
+      text-align: center;
+      padding: 10px;
+      color: rgb(139, 139, 139);
+      transition: .25s;
+      border-width: 1px;
+
+    }
+
+    input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
+      width: 200px;
+    }
+
+    input[type="submit"] {
+      width: 90px;
+      outline: 0;
+      border: 0px solid;
+      border-radius: 12px;
+      text-align: center;
+      padding: 10px;
+      color: rgb(0, 0, 0);
+      transition: .25s;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background: #4a4a4a;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .wrapper > * {
+      text-align: center;
+    }
+
+    .main {
+      display: flex;
+      flex-flow: row wrap;
+      width: 100vw;
+      min-height: 100vh;
+    }
+
+    .login, .register {
+      font-family: "Gill Sans", sans-serif;
+      min-height: 100vh;
+      /* background: url("https://unsplash.com/photos/keqdnDale3M/download?force=true") no-repeat; */
+      background-size: cover;
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login form, .register form {
+      background-color: #ededed;
+      width: 350px;
+      padding: 20px;
+      min-height: 250px;
+      border-radius: 20px;
+      text-align: center;
+      display: flex;
+      flex-flow: column;
+      justify-content: center;
+      align-items: center;
+      transition: .26s;
+    }
+
+    .login form:hover, .register form:hover {
+      background-color: #c8c8c8a3;
+    }
+
+    h1 {
+      font-family: "Gill Sans", sans-serif;
+      font-family: 'Montserrat';
+      font-weight: 900;
+      color: white;
+    }
+
+    h1 span {
+      font-family: "Gill Sans", sans-serif;
+      color: orange;
+    }
+
+    @media all and (max-width: 800px) {
+      .wrapper {
+        flex-flow: column;
+      }
+
+      .main {
+        flex-flow: column;
+      }
+
+      .login, .register {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="register">
+    <form class="form-cont" action="/user/register" method="POST" id="registerForm">
+      <h1 style="color: black; font-family: Gill Sans, sans-serif">REG!STER HERE</h1>
+      <input type="email" placeholder="email" id="email" name="email" />
+      <input type="password" placeholder="password" id="password" name="password" />
+      <input type="password" placeholder="confirm password" id="confirm_password" name="confirm_password" />
+      <input type="submit" value="Register" />
+      <p class="message" style="color: rgb(0, 0, 0);">
+        Already registered? <a href="/user/login" style="color: rgb(50, 50, 50);">Login</a>
+      </p>
+    </form>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('registerForm').addEventListener('submit', validateForm);
+    });
+
+    function validateForm(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const confirmPassword = document.getElementById('confirm_password').value.trim();
+
+  
+      if (email === "" || password === "" || confirmPassword === "") {
+        Swal.fire("All fields are required!");
+        return false;
+      }
+
+      const emailRegex = /^(?!\*)[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const gmailRegex = /^[^*]+@gmail\.com$/;
+
+if (!emailRegex.test(email)) {
+  Swal.fire("Invalid email address.");
+  return false;
+}
+
+if (email.endsWith("@gmail.com") && !gmailRegex.test(email)) {
+  Swal.fire("Invalid Gmail address.");
+  return false;
+}
+
+
+   
+      if (password !== confirmPassword) {
+        Swal.fire("Passwords do not match.");
+        return false;
+      }
+
+    //   const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+    // if (!strongPasswordRegex.test(password)) {
+    //   Swal.fire("Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number, and one special character.");
+    //   return false;
+    // }
+
+
+     
+      if (password.length < 6) {
+        Swal.fire("Password must be at least 6 characters long.");
+        return false;
+      }
+
+      Swal.fire("Registration completed successfully");
+      e.target.submit(); // Submit the form if validation passes
+    }
+  </script>
+</body>
+</html>

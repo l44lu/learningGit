@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        form > * {
+            display: block;
+            margin: 15px auto;
+        }
+
+        input[type="email"], input[type="password"] {
+            width: 250px;
+            outline: 0;
+            border: 0px solid;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            color: black;
+            transition: 0.25s;
+        }
+
+        input[type="email"]:focus, input[type="password"]:focus {
+            width: 200px;
+        }
+
+        input[type="submit"] {
+            
+            width: 90px;
+            outline: 0;
+            border: 0px solid;
+            border-radius: 5px;
+            text-align: center;
+            padding: 10px;
+            color: rgb(255, 255, 255);
+            transition: 0.25s;
+            cursor: pointer;
+            background-color: #000000;
+            border-color: aliceblue;
+            border-width: 2px;
+        }
+
+        input[type="submit"]:hover {
+            background: #454545;
+        }
+
+        .login {
+            float: left;
+            width: 100%;
+            min-height: 100vh;
+            /* background: url("https://unsplash.com/photos/nvFpb_MMRj8/download?force=true") no-repeat; */
+            background-size: cover;
+            background-color: rgb(54, 54, 54);
+            display: flex;
+            flex-flow: column wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login form {
+            background-color: #000000;
+            width: 350px;
+            padding: 20px;
+            min-height: 250px;
+            border-radius: 20px;
+            text-align: center;
+            display: flex;
+            flex-flow: column;
+            justify-content: center;
+            align-items: center;
+            transition: 0.26s;
+        }
+
+        .login form:hover {
+            background-color: #131b1ea3;
+        }
+
+        h1 {
+            font-family: "Gill Sans", sans-serif;
+            font-weight: 1000;
+            color: white;
+        }
+
+        h1 span {
+            color: orange;
+        }
+
+        p.message {
+            font-family: "Gill Sans", sans-serif;
+            color: white;
+        }
+
+        p.message a {
+            font-family: "Gill Sans", sans-serif;
+            color: rgb(193, 193, 193);
+            text-decoration: none;
+        }
+
+        p.message a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login">
+        <% if (message) { %>
+            <div class="alert" style="font-weight: 700; font-family:  Gill Sans, sans-serif; color: red;">
+                <%= message %>
+            </div>
+        <% } %>
+        <br>
+        <form id="loginForm" action="/user/login" method="POST">
+            <h1>LOGIN !</h1>
+            <input type="email" id="email" name="email" placeholder="Email" autocomplete="off">
+            <input type="password" id="password" name="password" placeholder="Password">
+            <input type="submit" value="Login">
+            <p class="message">
+                Not registered? <a href="/user/register">Create an account</a>
+            </p>
+            <p class="message">
+                Admin? <a href="/admin/login">Login</a>
+            </p>
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('loginForm').addEventListener('submit', validateForm);
+        });
+
+        function validateForm(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            let errorMessage = "";
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (email === "") {
+                errorMessage = "Email is required";
+            } else if (!emailRegex.test(email)) {
+                errorMessage = "Invalid email address";
+            } else if (password === "") {
+                errorMessage = "Password is required";
+            } else if (password.length < 6) {
+                errorMessage = "Password must be at least 6 characters long";
+            }
+
+            if (errorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: errorMessage,
+                });
+                return false;
+            }
+
+            e.target.submit();
+        }
+    </script>
+</body>
+</html>
